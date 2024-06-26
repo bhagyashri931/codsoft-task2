@@ -1,0 +1,34 @@
+Task 2: Calculator
+def calculator():
+    while True:
+        try:
+            num1 = float(input("Enter first number: "))
+            num2 = float(input("Enter second number: "))
+            operation = input("Choose operation (+, -, *, /): ")
+
+            if operation == '+':
+                result = num1 + num2
+            elif operation == '-':
+                result = num1 - num2
+            elif operation == '*':
+                result = num1 * num2
+            elif operation == '/':
+                if num2 != 0:
+                    result = num1 / num2
+                else:
+                    print("Error: Division by zero.")
+                    continue
+            else:
+                print("Invalid operation. Please try again.")
+                continue
+
+            print(f"Result: {result}")
+        except ValueError:
+            print("Invalid input. Please enter numeric values.")
+
+        again = input("Do you want to perform another calculation? (yes/no): ")
+        if again.lower() != 'yes':
+            break
+
+if __name__ == "__main__":
+    calculator()
