@@ -1,34 +1,78 @@
 Task 2: Calculator
-def calculator():
-    while True:
-        try:
-            num1 = float(input("Enter first number: "))
-            num2 = float(input("Enter second number: "))
-            operation = input("Choose operation (+, -, *, /): ")
+import tkinter as tk
+from tkinter import messagebox, simpledialog
 
-            if operation == '+':
-                result = num1 + num2
-            elif operation == '-':
-                result = num1 - num2
-            elif operation == '*':
-                result = num1 * num2
-            elif operation == '/':
-                if num2 != 0:
-                    result = num1 / num2
-                else:
-                    print("Error: Division by zero.")
-                    continue
+def calculate(num1, num2, operation):
+    try:
+        num1 = float(num1)
+        num2 = float(num2)
+
+        if operation == '+':
+            result = num1 + num2
+        elif operation == '-':
+            result = num1 - num2
+        elif operation == '*':
+            result = num1 * num2
+        elif operation == '/':
+            if num2 != 0:
+                result = num1 / num2
             else:
-                print("Invalid operation. Please try again.")
-                continue
+                messagebox.showerror("Error", "Division by zero.")
+                return None
+        else:
+            messagebox.showerror("Error", "Invalid operation.")
+            return None
 
-            print(f"Result: {result}")
-        except ValueError:
-            print("Invalid input. Please enter numeric values.")
+        return result
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter numeric values.")
+        return None
 
-        again = input("Do you want to perform another calculation? (yes/no): ")
-        if again.lower() != 'yes':
-            break
+def perform_calculation(num1, num2, operation):
+    result = calculate(num1, num2, operation)
+    if result is not None:
+        result_label.config(text=f"Result: {result}")
+
+def calculator_gui():
+    global result_label
+    root = tk.Tk()
+    root.title("Calculator")
+
+    # Input fields and labels
+    tk.Label(root, text="Calculator", font=("Helvetica", 16)).grid(row=0, columnspan=2, pady=10)
+    tk.Label(root, text="Enter first number:").grid(row=1, column=0, padx=10, pady=5)
+    num1_entry = tk.Entry(root)
+    num1_entry.grid(row=1, column=1, padx=10, pady=5)
+
+    tk.Label(root, text="Enter second number:").grid(row=2, column=0, padx=10, pady=5)
+    num2_entry = tk.Entry(root)
+    num2_entry.grid(row=2, column=1, padx=10, pady=5)
+
+    # Operation buttons
+    def select_operation(op):
+        operation_entry.delete(0, tk.END)
+        operation_entry.insert(tk.END, op)
+
+    tk.Button(root, text="+", command=lambda: select_operation('+')).grid(row=3, column=0, padx=10, pady=5)
+    tk.Button(root, text="-", command=lambda: select_operation('-')).grid(row=3, column=1, padx=10, pady=5)
+    tk.Button(root, text="*", command=lambda: select_operation('*')).grid(row=4, column=0, padx=10, pady=5)
+    tk.Button(root, text="/", command=lambda: select_operation('/')).grid(row=4, column=1, padx=10, pady=5)
+
+    operation_entry = tk.Entry(root, width=5)
+    operation_entry.grid(row=3, column=2, padx=10, pady=5)
+
+    # Result display
+    result_label = tk.Label(root, text="", font=("Helvetica", 12))
+    result_label.grid(row=5, columnspan=2, pady=10)
+
+    # Calculate button
+    tk.Button(root, text="Calculate", command=lambda: perform_calculation(num1_entry.get(), num2_entry.get(), operation_entry.get())).grid(row=6, columnspan=2, pady=10)
+
+    # Exit button
+    tk.Button(root, text="Exit", command=root.quit).grid(row=7, columnspan=2, pady=10)
+
+    root.mainloop()
 
 if __name__ == "__main__":
-    calculator()
+    calculator_gui()
+
